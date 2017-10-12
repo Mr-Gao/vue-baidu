@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box{
+            width: 300px;
+            margin: 100px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <input type="text" v-model="text" @keyup="search()">
+    <ul>
+        <li v-for="item in arr" v-text="item"></li>
+    </ul>
+</div>
+
+</body>
+<script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.3.4/vue-resource.min.js"></script>
+<script>
+
+    new Vue({
+        el: '.box',
+        data:{
+            text: '',
+            arr: ''
+        },
+        methods:{
+            search: function () {
+//1                jsonp请求 第一个参数是url地址  第二个参数是你需要设置的参数细节 把网络请求转成json形式
+                this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?',{
+                    params:{
+                        wd: this.text
+                    },
+                    jsonp: 'cb'
+                },{
+                    emulateJSON: true
+//                        then的第一个参数是请求成功后执行的函数  第二个参数是失败后执行的函数
+                }).then(function (res) {
+//                    请求成功后执行的函数
+                    this.arr = res.data.s;
+                },function (res) {
+//                    请求失败后执行的函数
+                    console.log(res);
+                })
+            }
+        }
+    })
+
+</script>
+</html>
